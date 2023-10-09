@@ -5,76 +5,66 @@ import data from '../data/data.json';
 // import { Link, Routes, Route } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import css from 'styled-components';
-// import Header from './Header';
+import Header from './Header';
 
 
 export default function Planet() {
     const [isClicked, setIsClicked] = useState('overview');
-    const [burgerMenu, setBurgerMenu] = useState(false);
+    const {planet}=useParams();
+    let planetObject = data.find( (currentPlanet) => currentPlanet.name === planet )
+    if(planetObject===undefined){
+        planetObject=data[2];
+       }
+     
 
-    const planets = [{planet:'MERCURY', color:'rgba(222, 244, 252, 1)'}, {planet:'VENUS', color:'rgba(247, 204, 127, 1)'},
-                {planet:'EARTH', color:'rgba(84, 91, 254, 1)'}, {planet:'MARS', color:'rgba(255, 106, 69, 1)'}, {planet:'JUPITER', color: 'rgba(236, 173, 122, 1)' }, {planet: 'SATURN', color: 'rgba(252, 203, 107, 1)'},{planet: 'URANUS', color:'rgba(101, 240, 213, 1)'}, {planet: 'NEPTUNE', color: 'rgba(73, 126, 250, 1)'}];
-   
- 
-  return (
-    <Background>
-        <Header>
-            <Title>
-                THE PLANETS
-            </Title>
-            <BurgerIcon src="/assets/icon-hamburger.svg"
-            onClick={ () => setBurgerMenu(!burgerMenu)}
-            /> 
-        </Header>
+    const planetOver = ['oberview', 'structure', 'surface'];
 
-            {burgerMenu && (
-                <BurgerDiv> 
-                    {planets.map((planet, index) => 
-                    <BurgerDivIn key={index}> 
-                        <BurgerDivInContainer>
-                            <ListsCircle color={planet.color} />
-                            {planet.planet}
-                        </BurgerDivInContainer>
+    return (
 
-                        <img src="/assets/icon-chevron.svg" alt="" />
+    <>
+     <LineDiv>
+      {planetOver.map((section, index) => (
+        <LineText
+          key={index}
+          onClick={() => setIsClicked(section)}
+          theme={{ color: planetObject?.color }}>
+          {`0${index + 1} ${section.toUpperCase()}`} 
 
-                    </BurgerDivIn>)};
+        </LineText>
+      ))}
+    </LineDiv>
 
-                </BurgerDiv>
-            )}
+        <PlanetImg src={isClicked === 'structure' ? planetObject?.images?.internal : planetObject?.images?.planet}/>
         
-
-    
-        <LineDiv>
-            <LineText onClick={ () => setIsClicked('overview')}>OVERVIEW</LineText>
-            <LineText onClick={ () => setIsClicked('structure')}>STRUCTURE</LineText>
-            <LineText onClick={ () => setIsClicked('surface')}> SURFACE</LineText>
-        </LineDiv>
-
-        <PlanetImg src={isClicked === 'structure' ? '/assets/planet-neptune-internal.svg': '/assets/planet-neptune.svg'}/>
-            {isClicked === 'surface' && (
-        <GeologyImg src="/assets/geology-neptune.png" />
+        {isClicked === 'surface' && (
+            <GeologyImg src={planetObject?.images?.geology}>
+            </GeologyImg>
         )}
+
         <About>
                 <h1>
-                    NEPTUNE
+                    {planetObject?.name}
                 </h1>
                 <p>
-                    {isClicked === 'structure' ? 'Neptunes internal structure resembles that of Uranus. Its atmosphere forms about 5% to 10% of its mass and extends perhaps 10% to 20% of the way towards the core. Increasing concentrations of methane, ammonia and water are found in the lower regions.' : isClicked=== 'surface' ? 'Neptunes atmosphere is 80% hydrogen and 19% helium. A trace amount of methane is also present. Prominent absorption bands of methane exist at wavelengths above 600 nm, in the red and infrared portion of the spectrum.' : 'Neptune is the eighth and farthest-known Solar planet from the Sun. In the Solar System, it is the fourth-largest planet by diameter, the third-most-massive planet, and the densest giant planet. It is 17 times the mass of Earth, more massive than its near-twin Uranus.'}
+                    {isClicked === 'structure' 
+                    ? planetObject?.structure?.content
+                     : isClicked=== 'surface' 
+                     ? planetObject?.geology?.content 
+                     : planetObject?.overview?.content }
                 </p>
                 <div>
-                    <p>Source : <a href="ss"> Wikipedia</a> </p>
+                    <p>Source : <a href='planetObject?.source'> Wikipedia</a> </p>
                     <img src="/assets/icon-source.svg" alt="" />                
                 </div>
-            </About>
+        </About>
 
-            <InfoContainer>
-                <InfoContIn>
+        <InfoContainer>
+                <InfoContIn> 
                     <p>
                         ROTATION TIME
                     </p>
                     <RightText>
-                    16.08 hours
+                        {planetObject?.rotation}
                     </RightText>
                 </InfoContIn>
                 <InfoContIn>
@@ -82,82 +72,34 @@ export default function Planet() {
                         REVOLUTION TIME
                     </p>
                     <RightText>
-                    164.79 years
+                        {planetObject?.revolution}
                     </RightText>
                 </InfoContIn><InfoContIn>
                     <p>
-                        RADIUS
-                        
+                        RADIUS 
                     </p>
                     <RightText>
-                    24,622 km
+                        {planetObject?.radius}
                     </RightText>
                 </InfoContIn><InfoContIn>
                     <p>
                         AVERAGE TEMP.
                     </p>
                     <RightText>
-                    -201°c
+                        {planetObject?.temperature}
                     </RightText>
                 </InfoContIn>
-            </InfoContainer>
-
-    
-    </Background>
+        </InfoContainer>
+    </>
   )
 }
+
+
 const breakpoints = {
     small: '375px',
     medium: '768px',
     large: '1440px',
   };
-const BurgerDivInContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 25px;
-`
-const ListsCircle = styled.div`
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: ${props => props.color};
-`
-
-const BurgerDiv = styled.div`
-    width: 100vw;
-    padding: 20px;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    background-color: #070724;
-    z-index: 1;
-`
-const BurgerDivIn = styled.div`
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    gap: 5px;
-    cursor: pointer;
-    
-
-    font-family: 'Spartan';
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 25px;
-    letter-spacing: 1.3636363744735718px;
-    text-align: center;
-    color: #FFFFFF;
-
-
-`
-
-const BurgerIcon = styled.img`
-    cursor: pointer;
-
-`
 const InfoContainer = styled.div`
     display: flex;
     width: 100%;
@@ -173,6 +115,12 @@ const InfoContainer = styled.div`
         margin: 0;
     }
    
+    @media (min-width: ${breakpoints.large}) {
+       justify-content: center;
+       gap: 30px;
+       margin-top: 50px;
+    }
+   
 `
 const RightText = styled.p`
     font-family: 'Antonio';
@@ -186,6 +134,10 @@ const RightText = styled.p`
     @media (min-width: ${breakpoints.medium}) {
         font-size: 24px;
         line-height: 31px;
+}
+@media (min-width: ${breakpoints.large}) {
+        font-size: 40px;
+        line-height: 51px;
 }
 
 `
@@ -212,13 +164,19 @@ const InfoContIn = styled.div`
        height: 88px;
        padding: 20px;
 }
+@media (min-width: ${breakpoints.large}) {
+       font-size: 11px;
+        line-height: 25px;
+        min-height: 128px;
+       padding: 40px;
+       min-width: 255px;
+    }
     
 `
 const About = styled.div`
-    
     opacity: 1;
     height: 100%;
-    width: 327px;
+    width: fit-content;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -267,7 +225,7 @@ const About = styled.div`
         }
     }
     @media (min-width: ${breakpoints.medium}) {
-        width: 339px;
+        max-width: 339px;
         text-align: left;
         float: left;
         gap: 30px;
@@ -282,44 +240,95 @@ const About = styled.div`
     & div {
         float: left;
         margin: 0;
+        }
+    }
+    @media (min-width: ${breakpoints.large}) {
+        position: absolute;
+        top: 185px;
+        right: 165px;
+        height: fit-content;
+        
+    & h1 {
+        font-size: 80px;
+        line-height: 104px;
+    }
+    & p {
+        font-size: 12px;
+        line-height: 25px;
+    }
+    & div {
+        float: left;
+        margin: 0;
     }
 }
 `;
 const GeologyImg =styled.img`
+    position: absolute;
     width: 40px;
     height: 50px;
-    display: block;
-    margin: -25px auto;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    @media (min-width: ${breakpoints.medium}) {
+        width: 100px;
+        height: 120px;
+}
+  @media (min-width: ${breakpoints.large}) {
+    width: 163px;
+    height: 199px;
+    left: 460px;
+    transform: translate(-50%, -105%); 
+}
 `;
 const PlanetImg = styled.img`
     width: 173px;
     height: 173px;
-    display: block;
+    display: flex;
     margin: 55px auto 0;
     @media (min-width: ${breakpoints.medium}) {
-        width: 285px;
-    height: 285px;
+        width: 422px;
+        height: 422px;
+}
+@media (min-width: ${breakpoints.large}) {
+    margin: 90px 0 auto;
+    width: 582px;
+    height: 582px;
 }
 `
 const LineText = styled.p`
    cursor: pointer;
+   display: flex;
+   align-items: center;
    opacity: 0.5;
-   padding: 20px;
    margin: 0 5px;
+   padding: 8px 20px;
    &:hover{
-    border-bottom: 4px solid #2D68F0;
- ;
+    border-bottom: 4px solid ${props => props.theme.color};
+ 
     opacity: 1;
    }
    @media (min-width: ${breakpoints.medium}) {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    width: 281px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        width: 281px;
         height: 40px;
+        &:hover{
+        border-bottom: none;
+            ;
+        background-color: ${props => props.theme.color};
+        ;
+        }
    }
+   @media (min-width: ${breakpoints.large}) {
+        height: 48px;
+        min-width: 350px;
+        min-height: 48px;
+    }
+   
+
 `
 const LineDiv = styled.div`
     display: flex;
     min-height: 54px;
+    width: auto;
     justify-content: space-between;
     align-items: center;
     font-family: 'Spartan';
@@ -330,49 +339,24 @@ const LineDiv = styled.div`
     color: white;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
     @media (min-width: ${breakpoints.medium}) {
+        position: absolute;
+        float: right;
+        top: 810px;
+        right: 20px;
         flex-direction: column;
         border-top: 0;
         border-bottom: 0;
         gap: 14px;
-        float: right;
-        margin-top: 450px;
     };
-`
-const Background = styled.div`
-    background-color: #070724;
-    width: 100vw;
-    min-height: 100vh;
-    background-image: url('/assets/background-stars.svg');
-    background-repeat: no-repeat;
-    padding-bottom: 20px;
-    @media (min-width: ${breakpoints.medium}) {
-        padding: 25px;
-    }
-    `;
-const Header = styled.header`
-    padding: 32px 24px;
-    height: 36px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    @media (min-width: ${breakpoints.medium}) {
-        flex-direction: column;
-        padding: 42px;
-        height: 50px;
-        gap: 40px;
+    @media (min-width: ${breakpoints.large}) {
+        font-size: 12px;
+        line-height: 25px;
+        letter-spacing: 2.5714285373687744px;
+        gap:20px;
+        top: 590px;
+        right: 165px;
+        margin: 0;
 }
-`;
-const Title = styled.h1`
-    font-family: 'Antonio';
-    font-size: 28px;
-    line-break: 36.23px;
-    color: white;
-    font-weight: 400;
-    letter-spacing: -1.05px;
-
-  
-`;
-
-
+`

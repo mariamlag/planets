@@ -1,77 +1,103 @@
 import data from '../data/data.json'
-import React from 'react';
-import styled from 'styled-components';
-import { useState } from 'react';
-import css from 'styled-components';
-// import { Link, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+import styled, {css} from 'styled-components';
+import { Link, Route, Routes, useParams } from 'react-router-dom';
 import Planet from './Planet';
 
 function Header() {
     const [burgerMenu, setBurgerMenu] = useState(false);
-    // const planets = [{planet:'MERCURY', color:'rgba(222, 244, 252, 1)'}, {planet:'VENUS', color:'rgba(247, 204, 127, 1)'},
-    //             {planet:'EARTH', color:'rgba(84, 91, 254, 1)'}, {planet:'MARS', color:'rgba(255, 106, 69, 1)'}, {planet:'JUPITER', color: 'rgba(236, 173, 122, 1)' }, {planet: 'SATURN', color: 'rgba(252, 203, 107, 1)'},{planet: 'URANUS', color:'rgba(101, 240, 213, 1)'}, {planet: 'NEPTUNE', color: 'rgba(73, 126, 250, 1)'}];
+    const {planet}=useParams();
 
-
-    return<>
-     <Head>
+    let planetObject = data.find( (currentPlanet) => currentPlanet.name === planet )
+    console.log(planetObject?.color)
+    return<Headers>
+        <Head>
             <Title>
                 THE PLANETS
             </Title>
             <BurgerIcon src="/assets/icon-hamburger.svg"
-            onClick={ () => setBurgerMenu(!burgerMenu)}
-            /> 
+            onClick={ () => setBurgerMenu(!burgerMenu)}/> 
+            <PlanetNames>
+                {data.map((planet, index) => {
+                    return (
+                    <Li theme={{ color: planetObject?.color }} >
+
+    
+                        <Link key={index} to={`/${planet.name}` }>
+                                 
+                                   {planet.name}    
+                        </Link> 
+                    </Li>
+                    );
+                })}
+            </PlanetNames>
         </Head>
-            <BurgerMenu>
-                <BurgerDiv> 
-                    {data.map((planet, index) => {
-                        return (<Link key={index} to={`/${planet.name}`}>
-                                    <BurgerDivIn>
-                                    <BurgerDivInContainer>
-                                        <ListsCircle color={planet.color} />
-                                        {planet.name}
-                                     </BurgerDivInContainer>
-                                </BurgerDivIn>
-                            </Link> 
-                        );
-                    })}
-                 </BurgerDiv>
-            </BurgerMenu>
-            <main>
-                    <Route>
-                        {data.map((planet, index) => {
-                            return <Route  key={index} element={ <Planet/>} path={`/${planet.name}`  }></Route>
-                        })}
-                    </Route>
-
-            </main>
-                    {/* // <BurgerDivIn key={index}> 
-                    //     <BurgerDivInContainer>
-                    //         <ListsCircle color={planet.color} />
-                    //         {planet.name}
-                    //     </BurgerDivInContainer>
-
-                    //     <img src="/assets/icon-chevron.svg" alt="" />
-
-                    // </BurgerDivIn>)}};
-
-                // </BurgerDiv> */}
-             {/* )} */}
-    </>
+        {burgerMenu && <BurgerMenu >
+                
+                {data.map((planet, index) => {
+                    return (<Link key={index} to={`/${planet.name}`}>
+                                <BurgerDivIn>
+                                <BurgerDivInContainer>
+                                    <ListsCircle color={planet.color} />
+                                    {planet.name}
+                                </BurgerDivInContainer>
+                            </BurgerDivIn>
+                        </Link> 
+                    );
+                })}
+            
+            </BurgerMenu>} 
+        
+                   
+    </Headers>
 };
 
 export default Header;
 
+
+const breakpoints = {
+    small: '375px',
+    medium: '768px',
+    large: '1440px',
+};
+const PlanetNames = styled.div`
+    display: none;
+    flex-direction: row;
+    gap: 45px;
+    font-family: 'Spartan';
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 25px;
+    letter-spacing: 1px;
+    text-align: left;
+    text-transform: uppercase;
+    opacity: 0.75;
+    text-decoration: none;
+    a{  
+        text-decoration: none;
+        color: white;
+
+    }
+
+    @media (min-width: ${breakpoints.medium}) {
+        display: flex;
+        
+}
+`
+const Headers = styled.div`
+    display: flex;
+    flex-direction: column;
+    
+`
+const Li = styled.li <{theme: {color: string}}>` 
+    ${props => css`
+    &:hover {
+        border-top: 4px solid ${props.theme.color};
+    }
+    `}
+    
+`
 const BurgerMenu = styled.nav `
-
-`
-
-const ListsCircle = styled.div`
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: ${props => props.color};
-`
-const BurgerDiv = styled.div`
     width: 100vw;
     padding: 20px;
     position: absolute;
@@ -79,7 +105,14 @@ const BurgerDiv = styled.div`
     flex-direction: column;
     background-color: #070724;
     z-index: 1;
-`
+    margin-top: 65px;
+`;
+const ListsCircle = styled.div`
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: ${props => props.color};
+`;
 const BurgerDivIn = styled.div`
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
@@ -99,32 +132,40 @@ const BurgerDivIn = styled.div`
     color: #FFFFFF;
 
 
-`
-const breakpoints = {
-    small: '375px',
-    medium: '768px',
-    large: '1440px',
-  };
+`;
+
 const BurgerDivInContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 25px;
 `
-
 const Head = styled.header`
     padding: 32px 24px;
-    height: 36px;
+    min-height: 36px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     @media (min-width: ${breakpoints.medium}) {
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
         padding: 42px;
-        height: 50px;
+        min-height: 50px;
         gap: 40px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
 }
+@media (min-width: ${breakpoints.large}) {
+        flex-direction: row;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+;   
+        
+}
+
 `;
 const Title = styled.h1`
     font-family: 'Antonio';
@@ -137,5 +178,7 @@ const Title = styled.h1`
 `;
 const BurgerIcon = styled.img`
     cursor: pointer;
-
+    @media (min-width: ${breakpoints.medium}) {
+        display: none;
+}
 `

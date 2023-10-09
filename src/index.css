@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 
 code {
@@ -15,4 +16,24 @@ code {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+#root{
+  background-color: #070724;
+  background-image: url('../public/assets/background-stars.svg');
+  background-repeat: no-repeat;
+  padding-bottom: 20px;
+  padding: 20px;
+  width: 100vw;
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) {
+  #root{
+  padding: 25px;
+}}
+
+@media (min-width: 1440px) {
+  #root{
+  padding: 20px 165px;
+}
 }
