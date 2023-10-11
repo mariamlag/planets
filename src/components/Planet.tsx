@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import Header from './Header';
 import { useMediaQuery } from 'usehooks-ts';
 import { type } from 'os';
-
+const infoData = [{text: "ROTATION TIME", info: "rotation"},{text: "REVOLUTION TIME", info: "revolution"},{text: "RADIUS", info: "radius"},{text: "AVERAGE TEMP.", info: "temperature"},];
 
 export default function Planet() {
     const [isClicked, setIsClicked] = useState('overview');
@@ -20,7 +20,8 @@ export default function Planet() {
 
     const planetOver = ['oberview', 'structure', 'surface'];
     const matches = useMediaQuery('(min-width: 768px)');
-    console.log(planetObject.size?.mobile.width)
+    console.log(infoData[0].info)
+
     return (
     <Body>
      <LineDiv>
@@ -34,8 +35,8 @@ export default function Planet() {
 
         </LineText>
       ))}
-        </LineDiv>
-            <ImagesDiv>
+    </LineDiv>
+        <ImagesDiv>
                 <PlanetImg src={isClicked === 'structure' ? planetObject?.images?.internal : planetObject?.images?.planet} 
                 size={planetObject?.size}
          />
@@ -44,7 +45,7 @@ export default function Planet() {
                     <GeologyImg src={planetObject?.images?.geology}>
                     </GeologyImg>
                 )}
-    </ImagesDiv>
+        </ImagesDiv>
         <About>
                 <h1>
                     {planetObject?.name}
@@ -63,36 +64,20 @@ export default function Planet() {
         </About>
 
         <InfoContainer>
-                <InfoContIn> 
-                    <p>
-                        ROTATION TIME
-                    </p>
+               
+                {infoData.map((info, index) => {
+                    return (
+                    <InfoContIn key={index}> 
+                        
+                        <p>
+                        {info.text}
+                        </p>
                     <RightText>
-                        {planetObject?.rotation}
+                        {(planetObject as any)?.[info.info]}
                     </RightText>
-                </InfoContIn>
-                <InfoContIn>
-                    <p>
-                        REVOLUTION TIME
-                    </p>
-                    <RightText>
-                        {planetObject?.revolution}
-                    </RightText>
-                </InfoContIn><InfoContIn>
-                    <p>
-                        RADIUS 
-                    </p>
-                    <RightText>
-                        {planetObject?.radius}
-                    </RightText>
-                </InfoContIn><InfoContIn>
-                    <p>
-                        AVERAGE TEMP.
-                    </p>
-                    <RightText>
-                        {planetObject?.temperature}
-                    </RightText>
-                </InfoContIn>
+                    </InfoContIn>
+                    )
+                })}
         </InfoContainer>
     </Body>
   )
@@ -104,14 +89,12 @@ const breakpoints = {
     medium: '768px',
     large: '1440px',
   };
-  const ImagesDiv = styled.div`
+const ImagesDiv = styled.div`
     height: 173px;
     @media (min-width: ${breakpoints.medium}) {
         height: 280px
     }
     @media (min-width: ${breakpoints.large}) {
-        /* height: 700px;
-        width: 700px; */
         display: flex;
          justify-content: center;
         align-items: center;
@@ -119,13 +102,16 @@ const breakpoints = {
     }
     
   `
-  const Body = styled.div`
-    padding: 20px;
+const Body = styled.div`
+@media (min-width: ${breakpoints.medium}) {
+        padding: 0 40px 36px;
+    }
     @media (min-width: ${breakpoints.large}) {
         padding: 25px 165px;
     }
 `
 const InfoContainer = styled.div`
+ padding:0 20px;
     display: flex;
     width: 100%;
     flex-direction: column;
@@ -166,6 +152,7 @@ const RightText = styled.p`
 
 `
 const InfoContIn = styled.div`
+  flex-grow: 1;
     height: 48px;
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -200,6 +187,7 @@ const InfoContIn = styled.div`
 `
 
 const About = styled.div`
+    padding: 0 20px;
     opacity: 1;
     height: 100%;
     width: fit-content;
@@ -302,10 +290,8 @@ const GeologyImg =styled.img`
     width: 163px;
     height: 199px;
     left: 50%;
-    transform: translate(-137%, 110%); 
+    transform: translate(-141.5%, 110%); 
     position: absolute;
-    /* left: 460px; */
-    /* transform: translate(-299%, -60%);  */
 }
 `;
 
@@ -326,7 +312,6 @@ type TPlanetImgProps = {
     } | undefined
 }
 const PlanetImg = styled.img <TPlanetImgProps>`
-
     ${(props) => css`
         width: ${ props?.size?.mobile.width}; 
         height: ${props?.size?.mobile.height};
@@ -359,9 +344,9 @@ const LineText = styled.p`
    cursor: pointer;
    display: flex;
    align-items: center;
+   min-height: inherit;
    opacity: 0.5;
-   margin: 0 5px;
-   padding: 8px 20px;
+   padding: 20px;
    &:hover{
     border-bottom: 4px solid ${props => props.theme.color};
  
@@ -388,7 +373,7 @@ const LineText = styled.p`
 `
 const LineDiv = styled.div`
     display: flex;
-    min-height: 54px;
+    min-height: 57px;
     width: auto;
     justify-content: space-between;
     align-items: center;
@@ -412,6 +397,7 @@ const LineDiv = styled.div`
         gap: 14px;
     };
     @media (min-width: ${breakpoints.large}) {
+       
         font-size: 12px;
         line-height: 25px;
         letter-spacing: 2.5714285373687744px;

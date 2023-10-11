@@ -18,15 +18,16 @@ code {
   box-sizing: border-box;
 }
 #root{
-  background-color: #070724;
-  background-image: url('../public/assets/background-stars.svg');
-  background-repeat: no-repeat;
+  
   min-width: 100vw;
   min-height: 100vh;
-  
+  padding-bottom: 20px;
 }
 body{
   overflow-x: hidden;
+  background-color: #070724;
+  background-image: url('../public/assets/background-stars.svg');
+  background-size: 100%;
 }
 
 

@@ -51,7 +51,6 @@ return<Headers>
 
 export default Header;
 
-
 const breakpoints = {
     small: '375px',
     medium: '768px',
@@ -75,14 +74,12 @@ const PlanetNames = styled.ul`
     a{  
         text-decoration: none;
         color: white;
-
     }
 
     @media (min-width: ${breakpoints.medium}) {
         display: flex;
         align-items: center;
-        min-height: 59px;
-        
+        min-height: 59px;       
 }
 `
 const Headers = styled.div`
@@ -95,6 +92,7 @@ const Li = styled.li <{color: string}>`
     ${(props) => css`
     list-style: none;
     padding-top: 30px;
+    text-decoration: none;
     &:hover {
         border-top: 4px solid ${props.color};
     }
@@ -110,6 +108,10 @@ const BurgerMenu = styled.nav `
     background-color: #070724;
     z-index: 1;
     margin-top: 65px;
+    text-decoration: none !important;
+    a{
+        text-decoration: none;
+    }
 `;
 const ListsCircle = styled.div`
     width: 20px;
@@ -125,7 +127,6 @@ const BurgerDivIn = styled.div`
     padding: 20px;
     gap: 5px;
     cursor: pointer;
-    
 
     font-family: 'Spartan';
     font-size: 15px;
@@ -134,8 +135,6 @@ const BurgerDivIn = styled.div`
     letter-spacing: 1.3636363744735718px;
     text-align: center;
     color: #FFFFFF;
-
-
 `;
 
 const BurgerDivInContainer = styled.div`
@@ -158,7 +157,6 @@ const Head = styled.header`
         align-items: center;
         padding: 27px;
         min-height: 50px;
-        /* gap: 39px; */
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 
 }
