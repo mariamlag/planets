@@ -290,7 +290,7 @@ const GeologyImg =styled.img`
     width: 163px;
     height: 199px;
     left: 50%;
-    transform: translate(-141.5%, 110%); 
+    transform: translate(-139%, 110%); 
     position: absolute;
 }
 `;
