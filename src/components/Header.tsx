@@ -1,16 +1,14 @@
 import data from '../data/data.json'
 import React, { useState } from 'react';
 import styled, {css} from 'styled-components';
-import { Link, Route, Routes, useParams } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 import Planet from './Planet';
+
 
 function Header() {
     const [burgerMenu, setBurgerMenu] = useState(false);
-    const {planet}=useParams();
 
-    let planetObject = data.find( (currentPlanet) => currentPlanet.name === planet )
-    console.log(planetObject?.color)
-    return<Headers>
+return<Headers>
         <Head>
             <Title>
                 THE PLANETS
@@ -20,10 +18,9 @@ function Header() {
             <PlanetNames>
                 {data.map((planet, index) => {
                     return (
-                    <Li theme={{ color: planetObject?.color }} >
+                    <Li key={index} color={planet.color} >
 
-    
-                        <Link key={index} to={`/${planet.name}` }>
+                        <Link  to={`/${planet.name}` }>
                                  
                                    {planet.name}    
                         </Link> 
@@ -37,7 +34,7 @@ function Header() {
                 {data.map((planet, index) => {
                     return (<Link key={index} to={`/${planet.name}`}>
                                 <BurgerDivIn>
-                                <BurgerDivInContainer>
+                                <BurgerDivInContainer onClick={() => setBurgerMenu(false)}>
                                     <ListsCircle color={planet.color} />
                                     {planet.name}
                                 </BurgerDivInContainer>
@@ -60,7 +57,8 @@ const breakpoints = {
     medium: '768px',
     large: '1440px',
 };
-const PlanetNames = styled.div`
+const PlanetNames = styled.ul`
+
     display: none;
     flex-direction: row;
     gap: 45px;
@@ -73,6 +71,7 @@ const PlanetNames = styled.div`
     text-transform: uppercase;
     opacity: 0.75;
     text-decoration: none;
+
     a{  
         text-decoration: none;
         color: white;
@@ -81,6 +80,8 @@ const PlanetNames = styled.div`
 
     @media (min-width: ${breakpoints.medium}) {
         display: flex;
+        align-items: center;
+        min-height: 59px;
         
 }
 `
@@ -89,13 +90,16 @@ const Headers = styled.div`
     flex-direction: column;
     
 `
-const Li = styled.li <{theme: {color: string}}>` 
-    ${props => css`
+const Li = styled.li <{color: string}>` 
+   
+    ${(props) => css`
+    list-style: none;
+    padding-top: 30px;
     &:hover {
-        border-top: 4px solid ${props.theme.color};
+        border-top: 4px solid ${props.color};
     }
-    `}
-    
+    `}  
+
 `
 const BurgerMenu = styled.nav `
     width: 100vw;
@@ -152,13 +156,14 @@ const Head = styled.header`
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 42px;
+        padding: 27px;
         min-height: 50px;
-        gap: 40px;
+        /* gap: 39px; */
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 
 }
 @media (min-width: ${breakpoints.large}) {
+    padding-top: 0;
         flex-direction: row;
         justify-content: space-between;
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -174,7 +179,9 @@ const Title = styled.h1`
     color: white;
     font-weight: 400;
     letter-spacing: -1.05px;
-  
+    @media (min-width: ${breakpoints.large}) {
+        padding-top: 20px;
+    }
 `;
 const BurgerIcon = styled.img`
     cursor: pointer;

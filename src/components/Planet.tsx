@@ -1,11 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import { useState } from 'react';
 import data from '../data/data.json';
 // import { Link, Routes, Route } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import css from 'styled-components';
 import Header from './Header';
+import { useMediaQuery } from 'usehooks-ts';
+import { type } from 'os';
 
 
 export default function Planet() {
@@ -18,29 +19,32 @@ export default function Planet() {
      
 
     const planetOver = ['oberview', 'structure', 'surface'];
-
+    const matches = useMediaQuery('(min-width: 768px)');
+    console.log(planetObject.size?.mobile.width)
     return (
-
-    <>
+    <Body>
      <LineDiv>
       {planetOver.map((section, index) => (
         <LineText
           key={index}
           onClick={() => setIsClicked(section)}
           theme={{ color: planetObject?.color }}>
-          {`0${index + 1} ${section.toUpperCase()}`} 
+        
+          {matches ? `0${index + 1}` : null} {section.toUpperCase()}
 
         </LineText>
       ))}
-    </LineDiv>
-
-        <PlanetImg src={isClicked === 'structure' ? planetObject?.images?.internal : planetObject?.images?.planet}/>
-        
-        {isClicked === 'surface' && (
-            <GeologyImg src={planetObject?.images?.geology}>
-            </GeologyImg>
-        )}
-
+        </LineDiv>
+            <ImagesDiv>
+                <PlanetImg src={isClicked === 'structure' ? planetObject?.images?.internal : planetObject?.images?.planet} 
+                size={planetObject?.size}
+         />
+                
+                {isClicked === 'surface' && (
+                    <GeologyImg src={planetObject?.images?.geology}>
+                    </GeologyImg>
+                )}
+    </ImagesDiv>
         <About>
                 <h1>
                     {planetObject?.name}
@@ -53,7 +57,7 @@ export default function Planet() {
                      : planetObject?.overview?.content }
                 </p>
                 <div>
-                    <p>Source : <a href='planetObject?.source'> Wikipedia</a> </p>
+                    <p>Source : <a href='https://en.wikipedia.org/wiki/Earth'> Wikipedia</a> </p>
                     <img src="/assets/icon-source.svg" alt="" />                
                 </div>
         </About>
@@ -90,7 +94,7 @@ export default function Planet() {
                     </RightText>
                 </InfoContIn>
         </InfoContainer>
-    </>
+    </Body>
   )
 }
 
@@ -100,14 +104,35 @@ const breakpoints = {
     medium: '768px',
     large: '1440px',
   };
+  const ImagesDiv = styled.div`
+    height: 173px;
+    @media (min-width: ${breakpoints.medium}) {
+        height: 280px
+    }
+    @media (min-width: ${breakpoints.large}) {
+        /* height: 700px;
+        width: 700px; */
+        display: flex;
+         justify-content: center;
+        align-items: center;
+        margin: 200px 0 200px -300px;
+    }
+    
+  `
+  const Body = styled.div`
+    padding: 20px;
+    @media (min-width: ${breakpoints.large}) {
+        padding: 25px 165px;
+    }
+`
 const InfoContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
     align-items: center;
-    margin: 70px auto;
+    margin-top: 70px;
     gap: 5px;
-    padding: 20px;
+    /* padding: 20px; */
     @media (min-width: ${breakpoints.medium}) {
         flex-direction: row;
         justify-content: space-between;
@@ -116,9 +141,8 @@ const InfoContainer = styled.div`
     }
    
     @media (min-width: ${breakpoints.large}) {
-       justify-content: center;
        gap: 30px;
-       margin-top: 50px;
+       padding-top: 90px;
     }
    
 `
@@ -165,6 +189,7 @@ const InfoContIn = styled.div`
        padding: 20px;
 }
 @media (min-width: ${breakpoints.large}) {
+    margin-top: 50px;
        font-size: 11px;
         line-height: 25px;
         min-height: 128px;
@@ -173,6 +198,7 @@ const InfoContIn = styled.div`
     }
     
 `
+
 const About = styled.div`
     opacity: 1;
     height: 100%;
@@ -180,7 +206,7 @@ const About = styled.div`
     display: flex;
     flex-direction: column;
     text-align: center;
-    margin: 0 auto;
+    margin: 30px auto;
     gap: 20px;
     & h1 {
         margin-top: 40px;
@@ -263,11 +289,11 @@ const About = styled.div`
 }
 `;
 const GeologyImg =styled.img`
-    position: absolute;
+    position: relative;
     width: 40px;
     height: 50px;
     left: 50%;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%, -75%); 
     @media (min-width: ${breakpoints.medium}) {
         width: 100px;
         height: 120px;
@@ -275,23 +301,58 @@ const GeologyImg =styled.img`
   @media (min-width: ${breakpoints.large}) {
     width: 163px;
     height: 199px;
-    left: 460px;
-    transform: translate(-50%, -105%); 
+    left: 50%;
+    transform: translate(-137%, 110%); 
+    position: absolute;
+    /* left: 460px; */
+    /* transform: translate(-299%, -60%);  */
 }
 `;
-const PlanetImg = styled.img`
-    width: 173px;
-    height: 173px;
+
+type TPlanetImgProps = {
+    size:{
+        mobile:{
+            width: string,
+            height: string
+        },
+        tab:{
+            width: string,
+            height: string
+        },
+        desk:{
+            width: string,
+            height: string
+        }
+    } | undefined
+}
+const PlanetImg = styled.img <TPlanetImgProps>`
+
+    ${(props) => css`
+        width: ${ props?.size?.mobile.width}; 
+        height: ${props?.size?.mobile.height};
+    `
+    }
+    
     display: flex;
-    margin: 55px auto 0;
+    margin: 40px auto 0;
     @media (min-width: ${breakpoints.medium}) {
-        width: 422px;
-        height: 422px;
+        margin: 96px auto 0;
+
+        ${(props) => css`
+        width: ${ props?.size?.tab.width}; 
+        height: ${props?.size?.tab.height};
+    `
+    }
 }
 @media (min-width: ${breakpoints.large}) {
-    margin: 90px 0 auto;
-    width: 582px;
-    height: 582px;
+ 
+   ${(props) => css`
+        width: ${ props?.size?.desk.width}; 
+        height: ${props?.size?.desk.height};
+    `
+    }
+    /* transform: translate(-90%, 0); */
+
 }
 `
 const LineText = styled.p`
@@ -343,7 +404,7 @@ const LineDiv = styled.div`
     @media (min-width: ${breakpoints.medium}) {
         position: absolute;
         float: right;
-        top: 810px;
+        top: 676px;
         right: 20px;
         flex-direction: column;
         border-top: 0;
@@ -355,7 +416,7 @@ const LineDiv = styled.div`
         line-height: 25px;
         letter-spacing: 2.5714285373687744px;
         gap:20px;
-        top: 590px;
+        top: 620px;
         right: 165px;
         margin: 0;
 }

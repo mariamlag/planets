@@ -12,8 +12,9 @@ function App() {
       <Header/>
      <Routes>
         <Route path={'/:planet'} element={<Planet/>}>
-        
         </Route>
+        <Route path={'/'} element={<Planet/>}> 
+              </Route>
      </Routes>
     </>
     );

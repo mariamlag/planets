@@ -21,19 +21,14 @@ code {
   background-color: #070724;
   background-image: url('../public/assets/background-stars.svg');
   background-repeat: no-repeat;
-  padding-bottom: 20px;
-  padding: 20px;
-  width: 100vw;
+  min-width: 100vw;
   min-height: 100vh;
+  
+}
+body{
+  overflow-x: hidden;
 }
 
-@media (min-width: 768px) {
-  #root{
-  padding: 25px;
-}}
 
-@media (min-width: 1440px) {
-  #root{
-  padding: 20px 165px;
-}
-}
+
+
